@@ -17,6 +17,7 @@ class MicrobitSerial:
     -    serial_thread - The thread of execution for serial communication.
     -    serial_socket (serial.Serial) - The serial connection object.
     -    commands_event (dict) - The dictionary of events and their associated commands.
+    -    NO_PORT (str) - Default port if no valid port exists
     -    keyboard (Controller) - The keyboard event handler.
     
      Methods:
@@ -33,14 +34,14 @@ class MicrobitSerial:
     """
 
     def __init__(self, port:str = "--"):
-        self.port = port            #Puerto serie
-        self.baudrate:int = 115200  #Velocidad de comunicacion
-        self.timeout:int = 0.01     #Tiempo de espera de comu.
-        self.state:bool = False     #Estado de la coneccion
-        self.serial_thread = None   #Hilo de ejecucicon serial
+        self.port = port            
+        self.baudrate:int = 115200  
+        self.timeout:int = 0.01     
+        self.state:bool = False     
+        self.serial_thread = None   
         self.serial_socket:serial.Serial = None
         self.commands_event:dict = None
-        #Controlador eventos de teclado
+        self.NO_PORT = "--"
         self.keyboard:Controller = Controller() 
 
     # -- SETTERS
@@ -94,7 +95,7 @@ class MicrobitSerial:
                 pass
 
         if len(result) == 0:
-            result.append("--")
+            result.append(self.NO_PORT)
             
         return result
 
@@ -143,7 +144,6 @@ class MicrobitSerial:
                                                
         except Exception as e:
             print("Thread error: ",e)
-            self.close_serial_connection()
 
     def _run_command(self, new_event:int):
         """

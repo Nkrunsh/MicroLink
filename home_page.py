@@ -95,12 +95,16 @@ class HomePage(ttk.Frame):
 
             
         else:               #Cambia Desconectado -> Conectado
-            self.rc.set_port(self.portvar.get())
-            self.rc.set_baudrate(self.baudratevar.get())
-            self.rc.set_commands_event(self.key_Settings)
-            self.connectBtn.configure(text="Dissconect")
-            self.rc.start_serial_communication()   
-                
+            if self.portvar.get() != self.rc.NO_PORT:
+                self.rc.set_port(self.portvar.get())
+                self.rc.set_baudrate(self.baudratevar.get())
+                self.rc.start_serial_communication()   
+                self.rc.set_commands_event(self.key_Settings)
+                self.connectBtn.configure(text="Dissconect")
+            else:
+                print("Port Incorrect")
+
+            
 
         
     def refresh_port(self, event) -> None: 
