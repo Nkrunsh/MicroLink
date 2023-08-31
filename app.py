@@ -22,7 +22,7 @@ class App(ThemedTk):
 
         self.title("Micro:Link")
         self.resizable(False, False)
-        self.iconphoto(False, PhotoImage(file="src/usb.png"))
+        self.iconphoto(False, PhotoImage(file="resources/usb.png"))
         #<a href="https://www.flaticon.es/iconos-gratis/usb" title="usb iconos">Usb iconos creados por srip - Flaticon</a>
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
         container = Frame(self, bg="#d8ebff")
