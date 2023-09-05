@@ -37,8 +37,8 @@ class PageSettigs(Toplevel):
 
         # UI construction 
         ttk.Label(self, text="Keyboard Settings", font=("Arial", 16)).grid(row=0, column=0,columnspan=4, pady=10, padx=60)
-        
         # Settings Area
+        
         for event in list(range(1,11)):
             label = ttk.Label(self,text=f"Message Received - {event}:")
             label.grid(row=event, column=1, padx=10, pady=5)
@@ -52,8 +52,14 @@ class PageSettigs(Toplevel):
             self.entrys.append(entry)
         
         #Save botton
+        
         ttk.Button(self,text="Save",width=50, command= self.save_settings).grid(row= 12, column=1, columnspan=2, padx=20, pady= 10)
-    
+        
+       # ttk.Button(self,text="Save",width=50, command= self.save_settings).pack(padx=20)
+        
+    def on_key_edit(self,event):
+        selected_item = self.table.selection()[0]
+        self.table.item(selected_item, values=(self.table.item(selected_item, 'values')[0], event.char.upper()))    
     def get_settings_len(self) -> int: 
         """Returns the length of the settings."""
 
@@ -75,5 +81,16 @@ class PageSettigs(Toplevel):
         with open('microlinkdata.pkl', 'wb') as file:
             pickle.dump(self.parent.key_Settings, file)
   
-        
+        self.parent.logbar.config(text="Saved keayboard actions")
         self.destroy()
+
+    def edit_cell(self,event):
+        # Obtén el índice de la columna seleccionada
+        column = self.table.identify_column(event.x)
+
+        if column != '#0':
+            # Obtén el índice del item seleccionado
+            item = self.table.identify_row(event.y)
+
+            # Inicia la edición de la celda
+            self.table.edit_item(item, column)

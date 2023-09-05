@@ -15,7 +15,6 @@ class MicrobitSerial:
     -    timeout (int) - The timeout to receive data.
     -    state (bool) - The state of the serial connection.
     -    serial_thread - The thread of execution for serial communication.
-    -    serial_socket (serial.Serial) - The serial connection object.
     -    commands_event (dict) - The dictionary of events and their associated commands.
     -    NO_PORT (str) - Default port if no valid port exists
     -    keyboard (Controller) - The keyboard event handler.
@@ -39,7 +38,6 @@ class MicrobitSerial:
         self.timeout:int = 0.01     
         self.state:bool = False     
         self.serial_thread = None   
-        self.serial_socket:serial.Serial = None
         self.commands_event:dict = None
         self.NO_PORT = "--"
         self.keyboard:Controller = Controller() 
@@ -118,7 +116,7 @@ class MicrobitSerial:
             self.serial_thread = threading.Thread(target=self._serial_worker)
             self.serial_thread.start()
 
-    def stop_serial_communication(self):
+    def stop_serial_communication(self) -> bool:
         """
         Stops serial communication.
         """
@@ -126,7 +124,8 @@ class MicrobitSerial:
         self.state = False
         if self.serial_thread is not None:
             self.serial_thread.join()
-
+            return True
+        return False
     def _serial_worker(self):
         """
          Private method for the serial communication thread.

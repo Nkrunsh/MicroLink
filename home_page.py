@@ -56,27 +56,35 @@ class HomePage(ttk.Frame):
         self.serial_thread = None
 
         # UI construction 
+        self.main_frame = ttk.Frame(self)
+        self.main_frame.config(border=5)
+        self.main_frame.pack(anchor=CENTER,side=TOP, padx=30, pady=5)
+        
+
 
         # SERIAL PORT 
-        ttk.Label(self, text="Serial Port ").grid(padx=20,pady=5, row=0,column=0)
-        self.portSelector = ttk.Combobox(self,textvariable=self.portvar,width=8, values=portList,state="readonly" )
+        ttk.Label(self.main_frame, text="Serial Port ").grid(row=0,column=0, padx=0, pady=15)
+        self.portSelector = ttk.Combobox(self.main_frame,textvariable=self.portvar,width=8, values=portList,state="readonly" )
         self.portSelector.bind("<Enter>",self.refresh_port)
         self.portSelector.grid(row=0,column=2)
 
         #BAUDRATE
-        ttk.Label(self, text="Baudrate").grid(padx=20,pady=5, row=0,column=3)
+        ttk.Label(self.main_frame, text="Baudrate").grid(row=0, column=3, padx=0, pady=0)
         baudrateList = [9600, 14400, 19200, 38400, 57600, 115200]
         self.baudratevar = IntVar(value=baudrateList[-1])
-        ttk.Combobox(self, width=8, state="readonly",
+        ttk.Combobox(self.main_frame, width=8, state="readonly",
                     textvariable=self.baudratevar, values=baudrateList).grid(row=0,column=4)
 
         # SETTIGNS
-        ttk.Button(self,text= "Keyboard Actions", width=25,command=self.open_settings).grid(row=1, column=0, columnspan=3, pady=10)
+        ttk.Button(self.main_frame,text= "Keyboard Actions", width=25,command=self.open_settings).grid(row=1, column=0, columnspan=3, padx=10, pady=0)
 
         #SERIAL CONECTION
-        self.connectBtn = ttk.Button(self,text= "Connect", width=25,command=self.serial_control)
-        self.connectBtn.grid(row=1, column=3, columnspan=3, pady=10, padx= 10)
-        
+        self.connectBtn = ttk.Button(self.main_frame,text= "Connect", width=25,command=self.serial_control)
+        self.connectBtn.grid(row=1, column=3, columnspan=3, pady=0, padx= 10)  
+
+        #LOG BAR
+        self.logbar = ttk.Label(self, text="Welcome to Micro:Link. Connect your device to get started", anchor=W)   
+        self.logbar.pack(side=BOTTOM, fill=X,padx=10,ipady=3)
     
     def open_settings(self) -> None:
         """Open the settings page"""
@@ -90,7 +98,8 @@ class HomePage(ttk.Frame):
             
             self.rc.state =False
             self.connectBtn.configure(text="Connect")
-            self.rc.stop_serial_communication()
+            if self.rc.stop_serial_communication():
+                self.logbar.config(text="Port disconnected successfully")
             
 
             
@@ -101,8 +110,9 @@ class HomePage(ttk.Frame):
                 self.rc.start_serial_communication()   
                 self.rc.set_commands_event(self.key_Settings)
                 self.connectBtn.configure(text="Dissconect")
+                self.logbar.config(text="Port connected successfully")
             else:
-                print("Port Incorrect")
+                self.logbar.config(text="Invalid port, check before connecting")
 
             
 

@@ -26,7 +26,7 @@ class App(ThemedTk):
         #<a href="https://www.flaticon.es/iconos-gratis/usb" title="usb iconos">Usb iconos creados por srip - Flaticon</a>
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
         container = Frame(self, bg="#d8ebff")
-        container.pack(side="top", fill="both", expand=True, padx=30, pady=15)
+        container.pack(side="top", fill="both", expand=True, padx=0, pady=0)
         container.grid_rowconfigure(0,weight=1)
         container.grid_columnconfigure(0, weight=1)
 
